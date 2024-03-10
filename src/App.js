@@ -9,11 +9,16 @@ function App() {
   const fetchWeatherData = async () => {
     try {
       const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`);
-      setWeatherData(response.data);
+      const data = response.data;
+      const celsiusTemp = (data.main.temp - 273.15).toFixed(1);
+      const updatedWeatherData = { ...data, main: { ...data.main, temp: celsiusTemp } };
+      setWeatherData(updatedWeatherData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
+  
+  
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -36,7 +41,7 @@ function App() {
             <div className="mt-8">
               <h2 className="text-xl font-bold">Weather Information</h2>
               <div className="mt-2">
-                <p>Temperature: {weatherData.main.temp} K</p>
+              <h2>Temperature: {weatherData.main.temp}°C</h2>
                 <p>Weather: {weatherData.weather[0].description}</p>
                 <p>Wind Speed: {weatherData.wind.speed} m/s</p>
                 <p>Humidity: {weatherData.main.humidity}%</p>
